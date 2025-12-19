@@ -21,21 +21,30 @@ Production-ready WordPress deployment stack optimized for Dokploy with Redis cac
 1. Go to your Dokploy dashboard
 2. Create a new project (or use existing)
 3. Add a new **Compose** service
-4. Set the **Compose Path** to `./docker-compose.yaml`
+4. Set the **Compose Path** to `./docker-compose.yml`
 5. Point to this repository (or upload the files)
 
-### 2. Configure Environment Variables
+### 2. Deploy
 
-In Dokploy, go to **Environment** tab and set:
+Click **Deploy** - passwords are **auto-generated** by Dokploy's template system.
 
-```env
-# Required - Database Credentials
-MYSQL_ROOT_PASSWORD=your_secure_root_password
-MYSQL_PASSWORD=your_secure_wordpress_password
-WORDPRESS_DB_PASSWORD=your_secure_wordpress_password
-```
+The `template.toml` file defines variables that Dokploy automatically generates:
+- Random 32-character database passwords
+- Domain configuration
 
-### 3. Configure Domains
+### 3. View Generated Passwords
+
+After deployment, check the **Environment** tab in Dokploy to see the auto-generated passwords for:
+- `MYSQL_ROOT_PASSWORD`
+- `MYSQL_PASSWORD` / `WORDPRESS_DB_PASSWORD`
+
+**Default Credentials:**
+| Service | Username | Password |
+|---------|----------|----------|
+| FileBrowser | admin | `admin` |
+| phpMyAdmin | wordpress | (your MYSQL_PASSWORD) |
+
+### 4. Configure Domains
 
 Go to the **Domains** tab in Dokploy and add:
 

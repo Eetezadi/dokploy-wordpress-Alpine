@@ -35,7 +35,7 @@ services:
     environment:
       - WORDPRESS_DB_HOST=${WORDPRESS_DB_HOST:-db}
       - WORDPRESS_DB_USER=${WORDPRESS_DB_USER:-wordpress}
-      - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD:-wordpress_password}
+      - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
       - WORDPRESS_DB_NAME=${WORDPRESS_DB_NAME:-wordpress}
       - WORDPRESS_CONFIG_EXTRA=
           define('WP_REDIS_HOST', 'redis');
@@ -77,10 +77,10 @@ services:
   db:
     image: mariadb:10.6
     environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-root_password}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE:-wordpress}
       - MYSQL_USER=${MYSQL_USER:-wordpress}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-wordpress_password}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     volumes:
       - db_data:/var/lib/mysql
     networks:
@@ -139,15 +139,12 @@ services:
         max_attempts: 3
 
   filebrowser:
-    image: filebrowser/filebrowser:latest
-    command: --noauth
-    environment:
-      - FB_BASEURL=/
-      - FB_ROOT=/srv
-      - FB_DATABASE=/database/filebrowser.db
+    build:
+      context: ./filebrowser
+      dockerfile: Dockerfile
     volumes:
       - wordpress_data:/srv
-      - filebrowser_data:/database
+      - filebrowser_data_new:/database
     ports:
       - "80"
     networks:
@@ -203,4 +200,4 @@ volumes:
   wordpress_data:
   db_data:
   redis_data:
-  filebrowser_data:
+  filebrowser_data_new:

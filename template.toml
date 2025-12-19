@@ -1,0 +1,21 @@
+[variables]
+domain = "${domain}"
+db_password = "${password:32}"
+db_root_password = "${password:32}"
+
+[[env]]
+key = "MYSQL_ROOT_PASSWORD"
+value = "${db_root_password}"
+
+[[env]]
+key = "MYSQL_PASSWORD"
+value = "${db_password}"
+
+[[env]]
+key = "WORDPRESS_DB_PASSWORD"
+value = "${db_password}"
+
+[[domains]]
+serviceName = "nginx"
+port = 80
+host = "${domain}"
