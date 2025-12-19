@@ -140,6 +140,7 @@ services:
 
   filebrowser:
     image: filebrowser/filebrowser:latest
+    command: --noauth
     environment:
       - FB_BASEURL=/
       - FB_ROOT=/srv
