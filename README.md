@@ -16,37 +16,33 @@ Production-ready WordPress deployment stack optimized for Dokploy with Redis cac
 
 ## Quick Start
 
-### 1. Create a Compose Service in Dokploy
+### Option A: One-Click Template Deploy (Auto-Generated Passwords)
 
-1. Go to your Dokploy dashboard
-2. Create a new project (or use existing)
-3. Add a new **Compose** service
-4. Set the **Compose Path** to `./docker-compose.yml`
-5. Point to this repository (or upload the files)
+1. In Dokploy, go to **Templates**
+2. Click **Settings** (gear icon) and set **Base URL** to:
+   ```
+   https://raw.githubusercontent.com/itsmereal/dokploy-wp/main
+   ```
+3. Search for **"WordPress + Redis Stack"**
+4. Click **Deploy** - passwords are auto-generated!
+5. Configure your domain in the **Domains** tab
 
-### 2. Deploy
+### Option B: Manual Compose Deploy
 
-Click **Deploy** - passwords are **auto-generated** by Dokploy's template system.
+1. Create a new **Compose** service in Dokploy
+2. Point to: `https://github.com/itsmereal/dokploy-wp`
+3. Set Compose Path: `./docker-compose.yml`
+4. Go to **Environment** tab and add:
+   ```
+   MYSQL_ROOT_PASSWORD=YourSecureRootPass123!
+   MYSQL_PASSWORD=YourSecureDbPass456!
+   WORDPRESS_DB_PASSWORD=YourSecureDbPass456!
+   ```
+5. Click **Deploy**
 
-The `template.toml` file defines variables that Dokploy automatically generates:
-- Random 32-character database passwords
-- Domain configuration
+### Configure Domains
 
-### 3. View Generated Passwords
-
-After deployment, check the **Environment** tab in Dokploy to see the auto-generated passwords for:
-- `MYSQL_ROOT_PASSWORD`
-- `MYSQL_PASSWORD` / `WORDPRESS_DB_PASSWORD`
-
-**Default Credentials:**
-| Service | Username | Password |
-|---------|----------|----------|
-| FileBrowser | admin | `admin` |
-| phpMyAdmin | wordpress | (your MYSQL_PASSWORD) |
-
-### 4. Configure Domains
-
-Go to the **Domains** tab in Dokploy and add:
+Go to the **Domains** tab and add:
 
 | Domain | Service | Port |
 |--------|---------|------|
@@ -54,9 +50,11 @@ Go to the **Domains** tab in Dokploy and add:
 | files.yourdomain.com | filebrowser | 80 |
 | pma.yourdomain.com | phpmyadmin | 80 |
 
-### 4. Deploy
-
-Click **Deploy** and wait for all services to start.
+**Default Credentials:**
+| Service | Username | Password |
+|---------|----------|----------|
+| FileBrowser | admin | `admin` |
+| phpMyAdmin | wordpress | (your MYSQL_PASSWORD) |
 
 ### 5. Activate Redis Cache
 
