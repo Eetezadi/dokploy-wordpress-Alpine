@@ -7,6 +7,8 @@ services:
       - "80"
     environment:
       - NGINX_CLIENT_MAX_BODY_SIZE=${NGINX_CLIENT_MAX_BODY_SIZE:-256M}
+    volumes:
+      - wordpress_data:/var/www/html:ro
     depends_on:
       wordpress:
         condition: service_healthy
