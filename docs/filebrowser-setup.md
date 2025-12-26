@@ -26,6 +26,7 @@ services:
   filebrowser:
     image: filebrowser/filebrowser:latest
     command: --root /srv --address 0.0.0.0 --port 80 --database /database/filebrowser.db
+    user: "0:0"
     volumes:
       - wordpress_files:/srv:rw
       - filebrowser_db:/database
@@ -42,7 +43,7 @@ networks:
 volumes:
   wordpress_files:
     external: true
-    name: YOUR_PROJECT_NAME_data  # <-- Replace with actual volume name
+    name: YOUR_PROJECT_NAME_data # <-- Replace with actual volume name
   filebrowser_db:
 ```
 
@@ -75,6 +76,7 @@ Then redeploy and check logs for the new password
 ### Volume not found
 
 Make sure:
+
 1. The WordPress stack is deployed and running
 2. The volume name matches exactly (case-sensitive)
 3. You're using `external: true` for the volume
