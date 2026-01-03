@@ -8,10 +8,9 @@ Production-ready WordPress deployment stack optimized for Dokploy with Redis cac
 |---------|-------------|
 | **WordPress** | PHP 8.3 FPM with Redis extension, OPcache, and WP-CLI |
 | **Nginx** | Optimized reverse proxy with caching and security headers |
-| **MariaDB 10.6** | Database server with health checks |
-| **Redis** | Object caching for improved performance |
+| **MySQL 9.4** | Database server with health checks |
+| **Redis 8** | Object caching for improved performance |
 | **phpMyAdmin** | Database administration interface |
-| **Plugin Installer** | Automatically installs Redis Object Cache plugin |
 
 ## Quick Start
 
@@ -69,11 +68,13 @@ Go to the **Domains** tab and add:
 
 ## Environment Variables
 
+All environment variables can be changed at any time and take effect on redeploy without requiring a container rebuild.
+
 ### Database Configuration
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `MYSQL_ROOT_PASSWORD` | - | **Required.** MariaDB root password |
+| `MYSQL_ROOT_PASSWORD` | - | **Required.** MySQL root password |
 | `MYSQL_DATABASE` | wordpress | Database name |
 | `MYSQL_USER` | wordpress | Database user |
 | `MYSQL_PASSWORD` | - | **Required.** Database password |
@@ -82,21 +83,16 @@ Go to the **Domains** tab and add:
 | `WORDPRESS_DB_PASSWORD` | - | **Required.** WordPress database password |
 | `WORDPRESS_DB_NAME` | wordpress | WordPress database name |
 
-### PHP Settings (No Rebuild Required)
+### PHP & Performance Settings
 
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `PHP_UPLOAD_MAX_FILESIZE` | 256M | Maximum upload file size |
 | `PHP_POST_MAX_SIZE` | 256M | Maximum POST data size |
-| `PHP_MEMORY_LIMIT` | 256M | PHP memory limit |
+| `PHP_MEMORY_LIMIT` | 512M | PHP memory limit |
 | `PHP_MAX_EXECUTION_TIME` | 300 | Script timeout in seconds |
 | `PHP_MAX_INPUT_TIME` | 300 | Input parsing timeout |
 | `PHP_MAX_INPUT_VARS` | 3000 | Maximum input variables |
-
-### OPcache Settings
-
-| Variable | Default | Description |
-|----------|---------|-------------|
 | `PHP_OPCACHE_MEMORY` | 128 | OPcache memory in MB |
 | `PHP_OPCACHE_MAX_FILES` | 4000 | Maximum cached files |
 | `PHP_OPCACHE_VALIDATE` | 0 | Validate timestamps (0=off for production) |
@@ -114,7 +110,7 @@ Go to the **Domains** tab and add:
 | `REDIS_MAXMEMORY` | 256mb | Redis maximum memory |
 | `REDIS_MAXMEMORY_POLICY` | allkeys-lru | Eviction policy |
 
-### Resource Limits (No Rebuild Required)
+### Resource Limits
 
 | Variable | Default | Description |
 |----------|---------|-------------|
@@ -129,37 +125,12 @@ Go to the **Domains** tab and add:
 | `PHPMYADMIN_CPU_LIMIT` | 0.5 | phpMyAdmin CPU limit |
 | `PHPMYADMIN_MEMORY_LIMIT` | 256M | phpMyAdmin memory limit |
 
-## Changing Settings After Deployment
-
-All PHP, Nginx, Redis, and resource settings can be changed without rebuilding:
-
-1. Go to your Compose service in Dokploy
-2. Navigate to **Environment** tab
-3. Update the desired variables
-4. Click **Redeploy**
-
-The containers will restart with the new settings.
-
-## Using WP-CLI
-
-WP-CLI is pre-installed in the WordPress container. To use it:
-
-```bash
-# Access the WordPress container
-docker exec -it <wordpress-container-name> bash
-
-# Run WP-CLI commands
-wp plugin list
-wp cache flush
-wp core update
-```
-
 ## Volumes
 
 | Volume | Purpose |
 |--------|---------|
 | `wordpress_data` | WordPress files (/var/www/html) |
-| `db_data` | MariaDB data |
+| `db_data` | MySQL data |
 | `redis_data` | Redis persistence |
 
 ## Security Recommendations
@@ -168,30 +139,6 @@ wp core update
 2. Consider restricting access to phpMyAdmin subdomain
 3. Enable Dokploy's built-in SSL/TLS
 4. Keep WordPress and plugins updated
-
-## Troubleshooting
-
-### WordPress not loading
-
-1. Check if all containers are running in Dokploy
-2. Verify database credentials match between services
-3. Check container logs for errors
-
-### Upload size issues
-
-Make sure both PHP and Nginx limits are set:
-
-```env
-PHP_UPLOAD_MAX_FILESIZE=512M
-PHP_POST_MAX_SIZE=512M
-NGINX_CLIENT_MAX_BODY_SIZE=512M
-```
-
-### Redis not connecting
-
-1. Verify Redis container is healthy
-2. Activate the Redis Object Cache plugin in WordPress
-3. Check Redis settings in WordPress admin
 
 ## License
 
