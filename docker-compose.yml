@@ -44,7 +44,7 @@ services:
       # PHP Settings
       - PHP_UPLOAD_MAX_FILESIZE=${PHP_UPLOAD_MAX_FILESIZE:-256M}
       - PHP_POST_MAX_SIZE=${PHP_POST_MAX_SIZE:-256M}
-      - PHP_MEMORY_LIMIT=${PHP_MEMORY_LIMIT:-256M}
+      - PHP_MEMORY_LIMIT=${PHP_MEMORY_LIMIT:-512M}
       - PHP_MAX_EXECUTION_TIME=${PHP_MAX_EXECUTION_TIME:-300}
       - PHP_MAX_INPUT_TIME=${PHP_MAX_INPUT_TIME:-300}
       - PHP_MAX_INPUT_VARS=${PHP_MAX_INPUT_VARS:-3000}
@@ -67,7 +67,8 @@ services:
           cpus: "${WORDPRESS_CPU_LIMIT:-1.0}"
           memory: "${WORDPRESS_MEMORY_LIMIT:-1G}"
     healthcheck:
-      test: ["CMD-SHELL", "php-fpm-healthcheck || exit 1"]
+      # Uses cgi-fcgi from Alpine's fcgi package
+      test: ["CMD-SHELL", "SCRIPT_NAME=/status SCRIPT_FILENAME=/status REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000 || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -75,7 +76,7 @@ services:
     restart: unless-stopped
 
   db:
-    image: mariadb:10.6
+    image: mysql:9.4
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE:-wordpress}
@@ -91,7 +92,7 @@ services:
           cpus: "${DB_CPU_LIMIT:-1.0}"
           memory: "${DB_MEMORY_LIMIT:-1G}"
     healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -99,7 +100,7 @@ services:
     restart: unless-stopped
 
   redis:
-    image: redis:alpine
+    image: redis:8-alpine
     command: redis-server --maxmemory ${REDIS_MAXMEMORY:-256mb} --maxmemory-policy ${REDIS_MAXMEMORY_POLICY:-allkeys-lru}
     volumes:
       - redis_data:/data

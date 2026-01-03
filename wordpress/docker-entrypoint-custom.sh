@@ -9,7 +9,7 @@ cat > "${PHP_INI_DIR}/custom-settings.ini" << EOF
 ; Custom PHP Settings - Configurable via Environment Variables
 upload_max_filesize = ${PHP_UPLOAD_MAX_FILESIZE:-256M}
 post_max_size = ${PHP_POST_MAX_SIZE:-256M}
-memory_limit = ${PHP_MEMORY_LIMIT:-256M}
+memory_limit = ${PHP_MEMORY_LIMIT:-512M}
 max_execution_time = ${PHP_MAX_EXECUTION_TIME:-300}
 max_input_time = ${PHP_MAX_INPUT_TIME:-300}
 max_input_vars = ${PHP_MAX_INPUT_VARS:-3000}
@@ -31,9 +31,26 @@ EOF
 echo "PHP settings configured:"
 echo "  upload_max_filesize: ${PHP_UPLOAD_MAX_FILESIZE:-256M}"
 echo "  post_max_size: ${PHP_POST_MAX_SIZE:-256M}"
-echo "  memory_limit: ${PHP_MEMORY_LIMIT:-256M}"
+echo "  memory_limit: ${PHP_MEMORY_LIMIT:-512M}"
 echo "  max_execution_time: ${PHP_MAX_EXECUTION_TIME:-300}s"
 echo "  OPcache memory: ${PHP_OPCACHE_MEMORY:-128}MB"
+
+# Initialize WordPress files (call original entrypoint for setup)
+docker-entrypoint.sh php-fpm -t
+
+# Inject custom wp-config.php modifications for dynamic domain handling
+if [ -f /var/www/html/wp-config.php ]; then
+    if ! grep -q "wp-config-custom.php" /var/www/html/wp-config.php; then
+        echo "Injecting custom configuration into wp-config.php..."
+        sed -i "2i\\
+// Custom configuration - Dynamic domain + Redis\\
+require_once('/usr/local/share/wp-config-custom.php');\\
+" /var/www/html/wp-config.php
+        echo "Custom configuration injected successfully."
+    else
+        echo "Custom configuration already present."
+    fi
+fi
 
 # Call the original WordPress entrypoint
 exec docker-entrypoint.sh "$@"
