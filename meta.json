@@ -6,8 +6,8 @@
     "description": "Production-ready WordPress with Nginx, Redis caching, phpMyAdmin, and WP-CLI",
     "logo": "logo.svg",
     "links": {
-      "github": "https://github.com/itsmereal/dokploy-wp",
-      "docs": "https://github.com/itsmereal/dokploy-wp#readme"
+      "github": "https://github.com/Eetezadi/dokploy-wordpress-Alpine",
+      "docs": "https://github.com/Eetezadi/dokploy-wordpress-Alpine#readme"
     },
     "tags": ["wordpress", "cms", "redis", "nginx", "self-hosted"]
   }
