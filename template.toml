@@ -1,4 +1,9 @@
+[template]
+name = "WordPress + Redis Stack"
+description = "Production-ready WordPress deployment with MariaDB, Redis caching, Nginx, and phpMyAdmin"
+
 [variables]
+domain = "${domain}"
 main_domain = "${domain}"
 db_name = "wordpress"
 db_user = "wordpress"
