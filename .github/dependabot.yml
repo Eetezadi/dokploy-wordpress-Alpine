@@ -1,0 +1,29 @@
+version: 2
+updates:
+  # WordPress Docker dependencies
+  - package-ecosystem: "docker"
+    directory: "/wordpress"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+    assignees:
+      - "Eetezadi"
+    labels:
+      - "dependencies"
+      - "docker"
+    commit-message:
+      prefix: "chore(deps)"
+
+  # Nginx Docker dependencies
+  - package-ecosystem: "docker"
+    directory: "/nginx"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+    assignees:
+      - "Eetezadi"
+    labels:
+      - "dependencies"
+      - "docker"
+    commit-message:
+      prefix: "chore(deps)"

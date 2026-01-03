@@ -1,7 +1,14 @@
 FROM nginx:alpine
 
-# Install envsubst (part of gettext) and wget for healthcheck
-RUN apk add --no-cache gettext wget
+# Install dependencies: gettext (envsubst), wget (healthcheck), netcat-openbsd (connection checks)
+RUN apk add --no-cache gettext wget netcat-openbsd
+
+# Create nginx directories with proper ownership (Railway pattern)
+RUN mkdir -p /var/cache/nginx /var/log/nginx /var/run \
+    && chown -R nginx:nginx /var/cache/nginx /var/log/nginx /var/run
+
+# Copy master nginx configuration
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # Copy nginx config template and entrypoint
 COPY default.conf.template /etc/nginx/templates/default.conf.template
