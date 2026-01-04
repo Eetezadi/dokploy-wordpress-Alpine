@@ -11,11 +11,13 @@ cleanup() {
 # Register signal handlers
 trap cleanup SIGTERM SIGINT
 
-# Set default value for NGINX_CLIENT_MAX_BODY_SIZE if not set
+# Set default values if not set
 export NGINX_CLIENT_MAX_BODY_SIZE="${NGINX_CLIENT_MAX_BODY_SIZE:-256M}"
+export SERVED_BY="${SERVED_BY:-Dokploy-Wordpress}"
 
 echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] Nginx configuration:"
 echo "  client_max_body_size: ${NGINX_CLIENT_MAX_BODY_SIZE}"
+echo "  served_by: ${SERVED_BY}"
 
 # Ensure template exists
 if [ ! -f /etc/nginx/templates/default.conf.template ]; then
@@ -25,7 +27,7 @@ fi
 
 # Process the template and generate the actual config
 echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] Generating Nginx configuration from template..."
-envsubst '${NGINX_CLIENT_MAX_BODY_SIZE}' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf
+envsubst '${NGINX_CLIENT_MAX_BODY_SIZE} ${SERVED_BY}' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf
 
 # Validate Nginx configuration
 echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] Validating Nginx configuration..."

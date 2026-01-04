@@ -7,6 +7,7 @@ services:
       - "80"
     environment:
       - NGINX_CLIENT_MAX_BODY_SIZE=${NGINX_CLIENT_MAX_BODY_SIZE:-256M}
+      - SERVED_BY=${SERVED_BY:-Dokploy-Wordpress}
     volumes:
       - wordpress_data:/var/www/html:ro
     depends_on:
