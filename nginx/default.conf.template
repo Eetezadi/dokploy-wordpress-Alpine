@@ -17,6 +17,9 @@ server {
     add_header X-Content-Type-Options "nosniff" always;
     add_header X-XSS-Protection "1; mode=block" always;
 
+    # Server identification header (for debugging/monitoring)
+    add_header X-Served-By "${SERVED_BY}" always;
+
     # Health check endpoint
     location /healthz {
         access_log off;
