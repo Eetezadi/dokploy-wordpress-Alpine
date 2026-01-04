@@ -12,29 +12,33 @@ Production-ready WordPress deployment stack optimized for Dokploy with Redis cac
 | **Redis 8** | Object caching for improved performance |
 | **phpMyAdmin** | Database administration interface |
 
+## Features
+
+**Performance**
+- Redis object caching with pre-configured WordPress integration
+- PHP OPcache enabled for opcode caching
+- Gzip compression for text assets
+- Static asset caching (30 days)
+- Auto CPU detection for Nginx workers
+
+**Security**
+- Security headers (X-Frame-Options, X-Content-Type-Options, X-XSS-Protection)
+- Nginx version hidden
+- Blocked: PHP uploads, xmlrpc.php, wp-config.php access, hidden files
+- Health checks on all containers
+
+**Operations**
+- Dynamic domain detection (no hardcoded URLs)
+- All settings configurable via environment variables (no rebuild needed)
+- Graceful shutdown handling (SIGTERM)
+- Database connectivity checks on startup
+- Configuration validation before start
+- WP-CLI pre-installed
+
 ## Quick Start
 
-### Option A: One-Click Template Deploy (Auto-Generated Passwords)
-
-1. In Dokploy, go to **Projects**
-2. Create a Project or open an existing Project
-3. Click **Create Service**
-4. Choose **Template**
-5. Set the **Base URL** to:
-   ```
-   https://raw.githubusercontent.com/itsmereal/dokploy-wp/main
-   ```
-6. You will find **"WordPress + Redis Stack"**
-7. Click **Create** and **Confirm**
-8. Click **Deploy** when the service is created
-9. Once deployed, go to the **Domains** tab and set your domain
-10. Go back to the **General** tab and click **Reload**
-11. Your WordPress site is ready!
-
-### Option B: Manual Compose Deploy
-
 1. Create a new **Compose** service in Dokploy
-2. Point to: `https://github.com/itsmereal/dokploy-wp`
+2. Point to: `https://github.com/Eetezadi/dokploy-wordpress-Alpine`
 3. Set Compose Path: `./docker-compose.yml`
 4. Go to **Environment** tab and add:
    ```
@@ -118,8 +122,8 @@ All environment variables can be changed at any time and take effect on redeploy
 | `NGINX_MEMORY_LIMIT` | 256M | Nginx memory limit |
 | `WORDPRESS_CPU_LIMIT` | 1.0 | WordPress CPU limit |
 | `WORDPRESS_MEMORY_LIMIT` | 1G | WordPress memory limit |
-| `DB_CPU_LIMIT` | 1.0 | MariaDB CPU limit |
-| `DB_MEMORY_LIMIT` | 1G | MariaDB memory limit |
+| `DB_CPU_LIMIT` | 1.0 | MySQL CPU limit |
+| `DB_MEMORY_LIMIT` | 1G | MySQL memory limit |
 | `REDIS_CPU_LIMIT` | 0.5 | Redis CPU limit |
 | `REDIS_MEMORY_LIMIT` | 512M | Redis memory limit |
 | `PHPMYADMIN_CPU_LIMIT` | 0.5 | phpMyAdmin CPU limit |
