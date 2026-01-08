@@ -91,7 +91,7 @@ services:
       resources:
         limits:
           cpus: "${DB_CPU_LIMIT:-1.0}"
-          memory: "${DB_MEMORY_LIMIT:-1G}"
+          memory: "${DB_MEMORY_LIMIT:-4G}"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 30s
